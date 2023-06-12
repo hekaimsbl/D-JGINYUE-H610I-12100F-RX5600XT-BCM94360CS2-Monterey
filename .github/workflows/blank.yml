@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ "workflow" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,3 +28,12 @@ jobs:
       # Runs a single command using the runners shell
       - name: package EFI
         run: zip  -q -r EFI.zip EFI/
+
+      - name: upload file
+        if: github.event_name == 'release'
+          uses: svenstaro/upload-release-action@e74ff71f7d8a4c4745b560a485cc5fdb9b5b999d
+            with:
+              repo_token: ${{ secrets.GITHUB_TOKEN }}
+              file: EFI.zip
+              tag: ${{ github.ref }}
+              file_glob: true
