@@ -12,8 +12,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  release:
+    types:
+      - published
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+      # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -30,6 +33,7 @@ jobs:
         run: zip  -q -r EFI.zip EFI/
 
       - name: upload file
+        if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@e74ff71f7d8a4c4745b560a485cc5fdb9b5b999d
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
